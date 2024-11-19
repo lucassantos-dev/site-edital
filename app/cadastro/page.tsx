@@ -65,7 +65,6 @@ export default function CadastroForm() {
       }
     } else {
       form.setValue('cidade', '');
-      
       form.setValue('estado', '');
     }
   };
