@@ -15,7 +15,6 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { CustomInput } from '@/components/custom-inputs'
-import { Phone, User } from 'lucide-react'
 import { formSchema } from '@/zod-schema/schema'
 import { toast } from 'react-toastify'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -30,13 +29,13 @@ export default function CadastroForm() {
       nome: '',
       cnpj: '',
       telefone: '',
-      especializacao:'nao',
-      experiencia:'nao',
-      experienciaHomeCare:'nao',
-      cargo: '', 
-      sexo:'',
+      especializacao: 'nao',
+      experiencia: 'nao',
+      experienciaHomeCare: 'nao',
+      cargo: '',
+      sexo: '',
       valor: '',
-      idade:'',
+      idade: '',
       cep: '',
       cidade: '',
       estado: '',
@@ -51,7 +50,7 @@ export default function CadastroForm() {
         const data = await response.json();
 
         if (data.erro) {
-          toast.error('CEP não encontrado.');
+          console.log('CEP não encontrado.');
           form.setValue('cidade', '');
           form.setValue('estado', '');
         } else {
@@ -60,7 +59,7 @@ export default function CadastroForm() {
           form.setValue('estado', data.uf || '');
         }
       } catch (error) {
-        toast.error('Erro ao buscar o CEP. Tente novamente.'+ error);
+        console.log('Erro ao buscar o CEP. Tente novamente.' + error);
       } finally {
         setCepLoading(false);
       }
@@ -83,7 +82,7 @@ export default function CadastroForm() {
   const valorMaximo = (cargo: Cargo | ''): number => {
     return cargosValores[cargo as Cargo] || 0
   }
-    // Validação customizada do campo 'valor' com base no cargo
+  // Validação customizada do campo 'valor' com base no cargo
   const valorValidator = (value: number, cargo: Cargo) => {
     const maxValue = valorMaximo(cargo)
     if (value >= maxValue) {
@@ -111,7 +110,7 @@ export default function CadastroForm() {
       // Limpa o erro se o cargo não for selecionado ainda
       form.clearErrors("valor")
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.watch('cargo')]) // A cada vez que o cargo mudar, o efeito será disparado
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -124,7 +123,7 @@ export default function CadastroForm() {
         <h2 className="text-3xl font-bold mb-8 text-center text-[#4a79ad]">Cadastro</h2>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">Dados Pessoais</h2>
+            <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">Dados Pessoais</h2>
             <FormField
               control={form.control}
               name="nome"
@@ -141,7 +140,6 @@ export default function CadastroForm() {
             <CustomInput
               labelText='CNPJ'
               control={form.control}
-              icon={User}
               registerName='cnpj'
               textlabel='xx.xxx.xxx/xxxx-xx'
               placeholder='xx.xxx.xxx/xxxx-xx'
@@ -165,7 +163,6 @@ export default function CadastroForm() {
               <CustomInput
                 labelText='Telefone'
                 control={form.control}
-                icon={Phone}
                 registerName='telefone'
                 textlabel='(xx) xxxxx-xxxx'
                 placeholder='(xx) xxxxx-xxxx'
@@ -197,7 +194,7 @@ export default function CadastroForm() {
             </div>
             <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">Dados Profissionais</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <FormField
+              <FormField
                 control={form.control}
                 name="especializacao"
                 render={({ field }) => (
@@ -262,7 +259,7 @@ export default function CadastroForm() {
               />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <FormField
+              <FormField
                 control={form.control}
                 name="cargo"
                 render={({ field }) => (
@@ -286,7 +283,7 @@ export default function CadastroForm() {
                   </FormItem>
                 )}
               />
-                 <FormField
+              <FormField
                 control={form.control}
                 name="valor"
                 render={({ field, fieldState }) => (
@@ -313,32 +310,27 @@ export default function CadastroForm() {
                   </FormItem>
                 )}
               />
-              </div>
+            </div>
             <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">Endereço</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <FormField
+              <div>
+              <CustomInput
+                labelText="CEP"
                 control={form.control}
-                name="cep"
-                render={({ field, fieldState }) => (
-                  <FormItem>
-                    <FormLabel>CEP</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Digite o CEP"
-                        {...field}
-                        onChange={(e) => {
-                          const cep = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
-                          field.onChange(cep);
-                          handleCepChange(cep);
-                        }}
-                      />
-                    </FormControl>
-                    {fieldState?.error && <FormMessage>{fieldState.error.message}</FormMessage>}
-                    {cepLoading && <p className="text-sm text-gray-500">Buscando informações...</p>}
-                  </FormItem>
-                )}
+                registerName="cep"
+                textlabel="XXXXX-XXX"
+                placeholder="Digite o CEP"
+                type="text"
+                maskName="cep" // Aplique a máscara para o CEP
+                defaultValue="" // Defina um valor inicial
+                onChange={(e) => {
+                  const cep = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+                  form.setValue('cep', cep); // Atualiza o valor do campo de CEP
+                  handleCepChange(cep); // Chama a função de busca do CEP
+                }}
               />
+              {cepLoading && <p className="text-sm mt-3 ml-1 text-gray-500">Buscando informações...</p>}
+              </div>
               <FormField
                 control={form.control}
                 name="cidade"

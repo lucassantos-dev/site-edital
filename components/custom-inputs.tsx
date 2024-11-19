@@ -4,7 +4,7 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/f
 import { Input } from "./ui/input"
 
 import { ChangeEvent } from 'react'
-import { normalizeCNPJ, normalizePhoneNumber } from "@/mask/mask"
+import { normalizeCEP, normalizeCNPJ, normalizePhoneNumber } from "@/mask/mask"
 
 
 interface CustomInputProps {
@@ -12,21 +12,32 @@ interface CustomInputProps {
   control: Control<any>
   registerName: string
   textlabel?: string
-  icon: React.ComponentType<any>
   placeholder?: string
   type: string
   maskName?: 'contact_phone' | 'cnpj' | 'cep'
   defaultValue?: string
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void; 
 }
 
-export const CustomInput = ({ defaultValue, labelText, registerName, icon: Icon, textlabel, control, placeholder, type, maskName }: CustomInputProps) => {
+export const CustomInput = ({ onChange,defaultValue, labelText, registerName, textlabel, control, placeholder, type, maskName }: CustomInputProps) => {
 
   const { setValue } = useFormContext()
 
   const mask = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
-    const newValue = maskName === 'cnpj' ? normalizeCNPJ(value) : maskName === 'contact_phone' ? normalizePhoneNumber(value) : value
-    setValue(name, newValue)
+    let newValue = value
+
+    // Aplique a máscara conforme o tipo
+    if (maskName === 'cnpj') {
+      newValue = normalizeCNPJ(value)
+    } else if (maskName === 'contact_phone') {
+      newValue = normalizePhoneNumber(value)
+    } else if (maskName === 'cep') {
+      // Se a máscara for de CEP, você pode aplicar o normalizeCEP aqui
+      newValue = normalizeCEP(value)
+      if (onChange) onChange(event)  // Chama o onChange, se fornecido
+    }
+    setValue(name, newValue)  // Atualiza o valor no form
   }
 
   return (
@@ -42,9 +53,9 @@ export const CustomInput = ({ defaultValue, labelText, registerName, icon: Icon,
             </FormLabel>
           </div>
           <div className="flex items-center relative">
-            <div className="text-slate-100 absolute ml-2">
+            {/* <div className="text-slate-100 absolute ml-2">
               <Icon className="size-5 stroke-1" />
-            </div>
+            </div> */}
             <FormControl onChange={mask}>
               <Input
                 defaultValue={defaultValue}
@@ -54,7 +65,7 @@ export const CustomInput = ({ defaultValue, labelText, registerName, icon: Icon,
                 {...field}
                 type={type}
                 autoComplete="off"
-
+                onChange={mask}
               />
             </FormControl>
           </div>

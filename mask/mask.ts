@@ -46,3 +46,19 @@ export const normalizePhoneNumber = (value: string) => {
     
     return formattedValue
   }
+
+  export const normalizeCEP = (value: string) => {
+    // Remove todos os caracteres não numéricos
+    const cleanedValue = value.replace(/\D/g, '')
+  
+    // Se não houver nada, retorna uma string vazia
+    if (!cleanedValue) return ''
+  
+    // Formata o CEP no formato XXXXX-XXX
+    let formattedValue = cleanedValue.substring(0, 5)
+    if (cleanedValue.length > 5) {
+      formattedValue += '-' + cleanedValue.substring(5, 8)
+    }
+  
+    return formattedValue
+  }
