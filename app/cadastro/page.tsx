@@ -14,11 +14,13 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { CustomInput } from '@/components/custom-inputs'
+import { CustomInput } from '@/components/form/custom-inputs'
 import { formSchema } from '@/zod-schema/schema'
 import { toast } from 'react-toastify'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useEffect, useState } from 'react'
+import CVUploadForm from '@/components/form/cvInput'
+import CRMUploadForm from '@/components/form/crmInput'
 
 
 export default function CadastroForm() {
@@ -295,6 +297,7 @@ export default function CadastroForm() {
                         type="number"
                         placeholder="Digite o valor"
                         {...field}
+                        value={field.value || ''}
                         onChange={(e) => {
                           const valor = parseInt(e.target.value, 10)
                           const cargo = form.watch('cargo') as Cargo
@@ -312,6 +315,9 @@ export default function CadastroForm() {
                 )}
               />
             </div>
+              <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+                <CRMUploadForm control={form.control}/>
+              </div>
             <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">Endereço</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
@@ -323,7 +329,6 @@ export default function CadastroForm() {
                 placeholder="Digite o CEP"
                 type="text"
                 maskName="cep" // Aplique a máscara para o CEP
-                defaultValue="" // Defina um valor inicial
                 onChange={(e) => {
                   const cep = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
                   form.setValue('cep', cep); // Atualiza o valor do campo de CEP
@@ -368,6 +373,9 @@ export default function CadastroForm() {
                   </FormItem>
                 )}
               />
+            </div>
+            <div>
+              <CVUploadForm control={form.control} />
             </div>
             <Button type="submit" className="w-full bg-[#67a892] hover:bg-[#4a79ad] h-12 text-lg">Cadastrar</Button>
           </form>

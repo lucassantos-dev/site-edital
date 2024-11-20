@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Control, useFormContext } from "react-hook-form"
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
-import { Input } from "./ui/input"
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form"
+import { Input } from "../ui/input"
 
 import { ChangeEvent } from 'react'
 import { normalizeCEP, normalizeCNPJ, normalizePhoneNumber } from "@/mask/mask"
@@ -48,7 +48,7 @@ export const CustomInput = ({ onChange,defaultValue, labelText, registerName, te
         <FormItem className="group space-y-0">
           <div className="flex flex-col space-x-2">
             <FormLabel className="">{labelText}</FormLabel>
-            <FormLabel htmlFor={registerName} className="text-sky-500 text-sm font-normal p-1 transition-opacity duration-300 opacity-0 group-focus-within:opacity-100 select-none">
+            <FormLabel htmlFor={registerName} className="text-sky-500 text-sm font-normal transition-opacity duration-300 opacity-0 group-focus-within:opacity-100 select-none text-right pr-3">
               {textlabel}
             </FormLabel>
           </div>
@@ -58,7 +58,6 @@ export const CustomInput = ({ onChange,defaultValue, labelText, registerName, te
             </div> */}
             <FormControl onChange={mask}>
               <Input
-                defaultValue={defaultValue}
                 id={registerName}
                 data-mask={maskName}
                 placeholder={placeholder}
