@@ -19,7 +19,7 @@ interface CustomInputProps {
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void; 
 }
 
-export const CustomInput = ({ onChange,defaultValue, labelText, registerName, textlabel, control, placeholder, type, maskName }: CustomInputProps) => {
+export const CustomInput = ({ onChange, labelText, registerName, textlabel, control, placeholder, type, maskName }: CustomInputProps) => {
 
   const { setValue } = useFormContext()
 

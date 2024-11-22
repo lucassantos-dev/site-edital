@@ -116,9 +116,29 @@ export default function CadastroForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.watch('cargo')]) // A cada vez que o cargo mudar, o efeito será disparado
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    toast('Cadastro realizado com sucesso!')
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      // Enviar os dados para a API usando fetch
+      const response = await fetch('/api/cadastrar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(values),
+      });
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Cadastro realizado:', result);
+        toast.success('Cadastro realizado com sucesso!');
+      } else {
+        const error = await response.json();
+        console.error('Erro ao cadastrar:', error);
+        toast.error('Erro ao realizar o cadastro. Tente novamente.');
+      }
+    } catch (error) {
+      console.error('Erro ao conectar com a API:', error);
+      toast.error('Erro ao se conectar com o servidor. Tente novamente.');
+    }
   }
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#4a79ad] to-[#67a892] flex items-center justify-center p-8">
@@ -315,7 +335,7 @@ export default function CadastroForm() {
                 )}
               />
             </div>
-              <div className='grid grid-cols-1 md:grid-cols-3 gap-6'>
+              <div className=''>
                 <CRMUploadForm control={form.control}/>
               </div>
             <h2 className="text-xl font-bold mb-8  text-[#4a79ad]">Endereço</h2>

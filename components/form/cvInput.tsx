@@ -1,9 +1,6 @@
 import { useState } from "react"
 import { Control } from "react-hook-form"
-import * as z from "zod"
-import { Button } from "@/components/ui/button"
 import {
-  Form,
   FormControl,
   FormDescription,
   FormField,
@@ -14,6 +11,7 @@ import {
 
 
 interface CustomInputProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>
 }
 export default function CVUploadForm({ control }: CustomInputProps) {
@@ -23,6 +21,7 @@ export default function CVUploadForm({ control }: CustomInputProps) {
     <FormField
       control={control}
       name="cv" // Certifique-se de que o nome seja o mesmo usado no schema
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       render={({ field: { onChange, value }, fieldState }) => (
         <FormItem>
           <FormLabel className="text-lg text-[#4a79ad] font-semibold">Currículo</FormLabel>
